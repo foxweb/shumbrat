@@ -7,10 +7,6 @@ require './lib/shumbrat/client_error'
 
 module Shumbrat
   class << self
-    def client
-      @client ||= Client.new
-    end
-
     def users_data
       client.users[:_embedded][:elements].map do |user|
         {
@@ -47,6 +43,12 @@ module Shumbrat
 
     def healthcheck
       puts client.healthcheck
+    end
+
+  private
+
+    def client
+      @client ||= Client.new
     end
   end
 end
