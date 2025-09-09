@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+require 'pry'
+require 'awesome_print'
+AwesomePrint.pry!
+
+require_relative '../lib/shumbrat'
+
+Pry.start(Shumbrat)
