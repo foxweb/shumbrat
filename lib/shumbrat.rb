@@ -44,5 +44,9 @@ module Shumbrat
         }
       end
     end
+
+    def healthcheck
+      puts client.healthcheck
+    end
   end
 end
