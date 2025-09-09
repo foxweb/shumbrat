@@ -1,3 +1,5 @@
+![Rubocop](https://github.com/foxweb/shumbrat/workflows/Rubocop/badge.svg)
+
 # Shumbrat
 
 Tiny Ruby client for OpenProject API.
