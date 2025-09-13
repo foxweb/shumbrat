@@ -1,7 +1,7 @@
 require './config/dotenv'
-require './config/oj'
 require 'pry'
 require 'awesome_print'
+require './lib/shumbrat/bonifas'
 require './lib/shumbrat/client'
 require './lib/shumbrat/client_error'
 

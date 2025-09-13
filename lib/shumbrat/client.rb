@@ -1,6 +1,4 @@
 require 'faraday'
-require 'faraday_middleware'
-require 'faraday_middleware/parse_oj'
 
 module Shumbrat
   class Client
@@ -49,7 +47,8 @@ module Shumbrat
     def handle_error(response)
       raise(
         ClientError,
-        "Shumbrat responded with HTTP #{response.status}: #{response.body.ai}"
+        # "Shumbrat responded with HTTP #{response.status}: #{response.body.ai}"
+        response.body[:message]
       )
     end
 
@@ -57,8 +56,9 @@ module Shumbrat
       def make_connection(url)
         Faraday.new(url:, ssl: { verify: false }) do |builder|
           builder.request :json
-          builder.request :basic_auth, 'apikey', ENV.fetch('SHUMBRAT_OPENAPI_TOKEN', nil)
-          builder.response :oj, content_type: 'application/hal+json'
+          builder.request :authorization, :basic, 'apikey', ENV.fetch('SHUMBRAT_OPENAPI_TOKEN', nil)
+          builder.response :json, content_type:   'application/hal+json',
+                                  parser_options: { symbolize_names: true }
 
           builder.adapter  Faraday.default_adapter
         end
