@@ -13,10 +13,6 @@ Layout/AccessModifierIndentation:
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: false
 
-Layout/ExtraSpacing:
-  Exclude:
-    - db/schema.rb
-
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
   EnforcedColonStyle: table
@@ -56,14 +52,6 @@ Lint/AssignmentInCondition:
 
 Bundler/OrderedGems:
   Enabled: false
-
-Performance/InefficientHashSearch:
-  Exclude:
-    - db/schema.rb
-
-Lint/ShadowingOuterLocalVariable:
-  Exclude:
-    - db/schema.rb
 
 Style/HashEachMethods:
   Enabled: true

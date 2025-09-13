@@ -15,12 +15,12 @@ module Shumbrat
       request(:get, 'health_check')
     end
 
-    def users
-      get('users')
+    def users(params:)
+      get('users', params)
     end
 
-    def projects
-      get('projects')
+    def projects(params:)
+      get('projects', params)
     end
 
     def wps_from_project(project_id:)

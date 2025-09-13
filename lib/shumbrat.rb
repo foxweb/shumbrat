@@ -7,8 +7,8 @@ require './lib/shumbrat/client_error'
 
 module Shumbrat
   class << self
-    def users_data
-      client.users[:_embedded][:elements].map do |user|
+    def users_data(params:)
+      client.users(params:)[:_embedded][:elements].map do |user|
         {
           id:     user[:id],
           login:  user[:login],
@@ -21,8 +21,8 @@ module Shumbrat
       end
     end
 
-    def projects_data
-      client.projects[:_embedded][:elements].map do |project|
+    def projects_data(params:)
+      client.projects(params:)[:_embedded][:elements].map do |project|
         {
           id:   project[:id],
           name: project[:name],
