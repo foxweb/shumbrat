@@ -2,7 +2,7 @@
 
 # Shumbrat
 
-Tiny Ruby client for OpenProject API.
+Tiny Ruby client for OpenProject API working over Telegram bot [@Kazimirbot](https://t.me/Kazimirbot).
 
 ![Shumbrat logo](/images/shumbrat_logo_small.png)
 
@@ -10,9 +10,12 @@ Tiny Ruby client for OpenProject API.
 
 ```sh
 $ bundle
-$ echo SHUMBRAT_OPENAPI_TOKEN=your_token > .env.local
-$ bin/console
+$ cp .env .env.local # insert your settings here
+$ bin/console        # start dev-console
+$ bin/bonifas        # start bot listener
 ```
+
+Available calls in console:
 ```sh
 pry(Shumbrat)> healthcheck
 pry(Shumbrat)> users_data
