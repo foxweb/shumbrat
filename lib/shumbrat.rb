@@ -24,9 +24,10 @@ module Shumbrat
     def projects_data(params:)
       client.projects(params:)[:_embedded][:elements].map do |project|
         {
-          id:   project[:id],
-          name: project[:name],
-          link: project[:_links][:self][:href]
+          id:         project[:id],
+          name:       project[:name],
+          identifier: project[:identifier],
+          link:       project[:_links][:self][:href]
         }
       end
     end

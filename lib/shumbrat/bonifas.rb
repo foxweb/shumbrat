@@ -23,33 +23,100 @@ module Shumbrat
           when '/stop'
             text = "Bye, #{message.from.first_name}"
           when '/users'
-            text = Shumbrat.users_data(params: {}).map do |u|
-              [u[:id], u[:login]].join(': ')
-            end.join("\n")
+            text = users_message
           when '/projects'
-            text = Shumbrat.projects_data(params: {}).map do |p|
-              [p[:id], p[:name]].join(': ')
-            end.join("\n")
+            text = projects_message
           when %r{/wps}
-            _, project_id = message.text.split
             begin
-              text = Shumbrat.wps_from_project_data(project_id:).map do |p|
-                [p[:id], p[:subject]].join(': ')
-              end.join("\n")
+              _, project_id = message.text.split
+              text = project_id ? wps_message(project_id) : 'Укажите ID проекта'
             rescue ClientError => e
-              text = e.message
+              text = escaped_text(e.message)
             end
+          else
+            text = 'Неизвестная команда'
           end
 
-          bot.api.send_message(chat_id: message.chat.id, text: normalize_text(text))
+          bot.api.send_message(chat_id: message.chat.id, text: normalize_text(text),
+                               parse_mode: 'MarkdownV2')
         end
       end
     end
 
     def normalize_text(text)
-      return 'Здесь ничего не нашлось (пустой массив)' if text.empty?
+      return escaped_text('Здесь ничего не нашлось (пустой массив)') if text.empty?
 
       text
+    end
+
+    def escaped_text(text)
+      return '' unless text
+
+      text
+        .gsub('_', '\\_')
+        .gsub('*', '\\*')
+        .gsub('[', '\\[')
+        .gsub(']', '\\]')
+        .gsub('(', '\\(')
+        .gsub(')', '\\)')
+        .gsub('~', '\\~')
+        .gsub('`', '\\`')
+        .gsub('>', '\\>')
+        .gsub('#', '\\#')
+        .gsub('+', '\\+')
+        .gsub('-', '\\-')
+        .gsub('=', '\\=')
+        .gsub('|', '\\|')
+        .gsub('{', '\\{')
+        .gsub('}', '\\}')
+        .gsub('.', '\\.')
+        .gsub('!', '\\!')
+    end
+
+    def users_message
+      Shumbrat.users_data(params: {}).map do |u|
+        link = "[#{escaped_text(u[:name])}](#{user_url(u[:id])})"
+        [u[:id], link].join(': ')
+      end.join("\n")
+    end
+
+    def user_url(id)
+      return unless id
+
+      [ENV.fetch('SHUMBRAT_OPENAPI_URL', nil), users, id].join('/')
+    end
+
+    def projects_message
+      Shumbrat.projects_data(params: {}).map do |p|
+        link = "[#{escaped_text(p[:name])}](#{project_url(p[:identifier])})"
+        [p[:id], link].join(': ')
+      end.join("\n")
+    end
+
+    def project_url(identifier)
+      return unless identifier
+
+      [
+        ENV.fetch('SHUMBRAT_OPENAPI_URL', nil),
+        'projects',
+        identifier,
+        'work_packages'
+      ].join('/')
+    end
+
+    def wps_message(project_id)
+      return unless project_id
+
+      Shumbrat.wps_from_project_data(project_id:).map do |wp|
+        link = "[#{escaped_text(wp[:subject])}](#{wp_url(wp[:id])})"
+        [wp[:id], link].join(': ')
+      end.join("\n")
+    end
+
+    def wp_url(id)
+      return unless id
+
+      [ENV.fetch('SHUMBRAT_OPENAPI_URL', nil), 'wp', id, 'activity'].join('/')
     end
   end
 end
