@@ -9,7 +9,10 @@ module Shumbrat
       @op_url = ENV.fetch('SHUMBRAT_OPENAPI_URL', nil)
     end
 
-    def run
+    def run # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+      raise 'No token provided' unless token
+      raise 'No OpenProject URL provided' unless op_url
+
       Telegram::Bot::Client.run(token, logger: Logger.new($stderr)) do |bot|
         bot.logger.info('Bot has been started')
         start_bot_time = Time.now.to_i
@@ -49,7 +52,7 @@ module Shumbrat
       text
     end
 
-    def escaped_text(text)
+    def escaped_text(text) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       return '' unless text
 
       text
@@ -83,7 +86,7 @@ module Shumbrat
     def user_url(id)
       return unless id
 
-      [ENV.fetch('SHUMBRAT_OPENAPI_URL', nil), users, id].join('/')
+      [ENV.fetch('SHUMBRAT_OPENAPI_URL', nil), 'users', id].join('/')
     end
 
     def projects_message
