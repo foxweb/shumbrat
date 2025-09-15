@@ -9,7 +9,7 @@ module Shumbrat
       @op_url = ENV.fetch('SHUMBRAT_OPENAPI_URL', nil)
     end
 
-    def run # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
+    def run # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/BlockLength
       raise 'No token provided' unless token
       raise 'No OpenProject URL provided' unless op_url
 
