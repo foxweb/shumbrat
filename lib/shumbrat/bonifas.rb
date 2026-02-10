@@ -9,19 +9,20 @@ module Shumbrat
       @op_url = ENV.fetch('SHUMBRAT_OPENAPI_URL', nil)
     end
 
-    def run # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/BlockLength
+    def run # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength
       raise 'No token provided' unless token
       raise 'No OpenProject URL provided' unless op_url
 
-      Telegram::Bot::Client.run(token, logger: Logger.new($stderr)) do |bot|
+      Telegram::Bot::Client.run(token, logger: Logger.new($stderr)) do |bot| # rubocop:disable Metrics/BlockLength
         bot.logger.info('Bot has been started')
         start_bot_time = Time.now.to_i
 
         bot.listen do |message|
           next if message.date < start_bot_time
+          next unless message.text.to_s.start_with?('/')
 
           case message.text
-          when '/start'
+          when '/start', '/hi', '/hello'
             text = "Hello, #{message.from.first_name}"
           when '/stop'
             text = "Bye, #{message.from.first_name}"
